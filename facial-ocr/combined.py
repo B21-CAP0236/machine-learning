@@ -62,6 +62,14 @@ def KTP_NIK():
 
     # Extraction
     nik_result = pytesseract.image_to_string(remove, lang="ind")
+    result_nik = []
+    for i in nik_result:
+        if i=='\n' or i=='\x0c':
+            pass
+        else:
+            result_nik.append(i)
+    result_nik = "".join(result_nik)
+    result_nik = result_nik.replace(" ", "")
     print(nik_result)
 
     # Matching
