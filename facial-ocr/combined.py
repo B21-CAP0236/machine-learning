@@ -64,7 +64,7 @@ def KTP_NIK():
     nik_result = pytesseract.image_to_string(remove, lang="ind")
     result_nik = []
     for i in nik_result:
-        if i=='\n' or i=='\x0c':
+        if i.isalnum() == False:
             pass
         else:
             result_nik.append(i)
