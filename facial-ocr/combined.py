@@ -46,7 +46,7 @@ def im2rgb(image) -> list:
     return cv.cvtColor(image, cv.COLOR_BGR2RGB)
 
 
-def isPictureMatch(image, x1, y1, x2, y2) -> bool:
+def isPictureMatch(image, image_from, x1, y1, x2, y2) -> bool:
     """
     Check if picture in KTP (grab using exact coord)
     is match with the one captured from the camera
@@ -59,7 +59,7 @@ def isPictureMatch(image, x1, y1, x2, y2) -> bool:
         y2 = second y coord of picture in KTP
     """
 
-    baseimg = im2rgb(face_recognition.load_image_file("edi_2.jpeg"))[x1:y1, x2:y2]
+    baseimg = im2rgb(face_recognition.load_image_file(image_from))[x1:y1, x2:y2]
     encodedim1 = face_recognition.face_encodings(baseimg)[0]
 
     try:
@@ -70,9 +70,9 @@ def isPictureMatch(image, x1, y1, x2, y2) -> bool:
     return face_recognition.compare_faces([encodedim1], encodedim2, tolerance=0.5)[0]
 
 
-def getKtpData(x1, y1, x2, y2):
+def getKtpData(image, x1, y1, x2, y2):
     # Load image
-    data = cv.imread("edi_2.jpeg")[x1:y1, x2:y2]
+    data = cv.imread(image)[x1:y1, x2:y2]
 
     # Image Processing
     gray_data = get_grayscale(data)
@@ -86,7 +86,7 @@ def getKtpData(x1, y1, x2, y2):
     return "".join([x for x in data_result if x.isalnum()])
 
 
-def isFaceMatch(x1, y1, x2, y2):
+def isFaceMatch(image, x1, y1, x2, y2):
     cap = cv.VideoCapture(0)
 
     if not cap.isOpened():
@@ -117,6 +117,7 @@ def isFaceMatch(x1, y1, x2, y2):
                 target=isPictureMatch,
                 args=(
                     frame,
+                    image,
                     x1,
                     y1,
                     x2,
