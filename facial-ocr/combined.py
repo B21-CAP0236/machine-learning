@@ -26,14 +26,15 @@ class ThreadWithReturnValue(Thread):
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
+def im2rgb(image) -> list:
+    return cv.cvtColor(image, cv.COLOR_BGR2RGB) 
 
 # Get grayscale image
 def get_grayscale(image):
     return cv.cvtColor(image, cv.COLOR_BGR2GRAY)
 
-def im2rgb(image) -> list:
-    return cv.cvtColor(image, cv.COLOR_BGR2RGB)
-
+def img2rotate(image) -> list:
+    return cv.rotate(image, cv.cv2.ROTATE_90_CLOCKWISE)
 
 def isPictureMatch(image, image_from, x1, y1, x2, y2) -> bool:
     """
@@ -48,7 +49,7 @@ def isPictureMatch(image, image_from, x1, y1, x2, y2) -> bool:
         y2 = second y coord of picture in KTP
     """
 
-    baseimg = im2rgb(face_recognition.load_image_file(image_from))[x1:y1, x2:y2]
+    baseimg = im2rgb(img2rotate(face_recognition.load_image_file(image_from)))[x1:y1, x2:y2]
     encodedim1 = face_recognition.face_encodings(baseimg)[0]
 
     try:
@@ -61,7 +62,7 @@ def isPictureMatch(image, image_from, x1, y1, x2, y2) -> bool:
 
 def getKtpData(image, x1, y1, x2, y2):
     # Load image
-    data = cv.imread(image)[x1:y1, x2:y2]
+    data = img2rotate(cv.imread(image))[x1:y1, x2:y2]
 
     # Image Processing
     gray_data = get_grayscale(data)
