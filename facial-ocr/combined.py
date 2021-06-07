@@ -31,17 +31,6 @@ def similar(a, b):
 def get_grayscale(image):
     return cv.cvtColor(image, cv.COLOR_BGR2GRAY)
 
-
-# Noise removal
-def remove_noise(image):
-    return cv.medianBlur(image, 5)
-
-
-# Thresholding
-def thresholding(image):
-    return cv.threshold(image, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)[1]
-
-
 def im2rgb(image) -> list:
     return cv.cvtColor(image, cv.COLOR_BGR2RGB)
 
@@ -76,12 +65,9 @@ def getKtpData(image, x1, y1, x2, y2):
 
     # Image Processing
     gray_data = get_grayscale(data)
-    thresh_data = thresholding(gray_data)
-    remove = remove_noise(thresh_data)
-    remove = remove_noise(remove)
 
     # Extraction
-    data_result = pytesseract.image_to_string(remove, lang="ind")
+    data_result = pytesseract.image_to_string(gray_data, lang="ind")
 
     return "".join([x for x in data_result if x.isalnum()])
 
@@ -148,5 +134,5 @@ def isFaceMatch(image, x1, y1, x2, y2):
 
 
 if __name__ == "__main__":
-    getKtpData(600, 800, 860, 2230)
-    isFaceMatch(670, 1620, 2300, 3100)
+    getKtpData(210, 270, 0, 520)
+    isFaceMatch(215, 590, 500, 800)
