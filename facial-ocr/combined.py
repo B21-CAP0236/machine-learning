@@ -1,6 +1,9 @@
 from threading import Thread
 from difflib import SequenceMatcher
 
+from PyQt5.QtGui import QImage
+from PyQt5.QtCore import Qt
+
 import pytesseract
 import face_recognition
 import cv2 as cv
@@ -122,6 +125,11 @@ def isFaceMatch(image, x1, y1, x2, y2, show=True, signal=None):
             if cv.waitKey(1) == ord("q"):
                 break
         else:
+            rgbImage = im2rgb(frame)
+            h, w, ch = rgbImage.shape
+            convertToQtFormat = QImage(rgbImage.data, w, h, ch * w, QImage.Format_RGB888)
+            frame = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
+
             signal.emit(len(threadList), frame)
 
         delay -= 1
