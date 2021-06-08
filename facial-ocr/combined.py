@@ -73,7 +73,7 @@ def getKtpData(image, x1, y1, x2, y2):
     return "".join([x for x in data_result if x.isalnum()])
 
 
-def isFaceMatch(image, x1, y1, x2, y2):
+def isFaceMatch(image, x1, y1, x2, y2, show=True, signal=None):
     cap = cv.VideoCapture(0)
 
     if not cap.isOpened():
@@ -115,9 +115,14 @@ def isFaceMatch(image, x1, y1, x2, y2):
             threadList.append(t)
 
         frame = cv.circle(frame, (int(width / 2), int(height / 2)), 250, (0, 255, 0), 2)
-        cv.imshow("frame", frame)
-        if cv.waitKey(1) == ord("q"):
-            break
+        
+        if show:
+            cv.imshow("frame", frame)
+
+            if cv.waitKey(1) == ord("q"):
+                break
+        else:
+            signal.emit(len(threadList), frame)
 
         delay -= 1
 
