@@ -42,6 +42,9 @@ These are features or models that available for machine learning part :
 - SequenceMatcher
 - opencv2
 
+to install the required dependencies simply type at command prompt/terminal:
+```pip3 install -r requirements.txt```
+
 ### How to Contribute
 
 These are steps that need to be done for development :
