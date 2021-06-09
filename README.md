@@ -8,7 +8,7 @@ We didnt manage to create our own version of the model because there are only so
 
 ## Feature(s)
 
-These are features or models that available for machine learning part :
+These are features or modules that available for machine learning part :
 
 1. OCR Module
 
