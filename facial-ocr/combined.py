@@ -12,19 +12,15 @@ import cv2 as cv
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
-
 def im2rgb(image) -> list:
-    return cv.cvtColor(image, cv.COLOR_BGR2RGB)
-
+    return cv.cvtColor(image, cv.COLOR_BGR2RGB) 
 
 # Get grayscale image
 def get_grayscale(image):
     return cv.cvtColor(image, cv.COLOR_BGR2GRAY)
 
-
 def img2rotate(image) -> list:
     return cv.rotate(image, cv.cv2.ROTATE_90_CLOCKWISE)
-
 
 def isPictureMatch(image, image_from, x1, y1, x2, y2) -> bool:
     """
@@ -39,11 +35,9 @@ def isPictureMatch(image, image_from, x1, y1, x2, y2) -> bool:
         y2 = second y coord of picture in KTP
     """
 
-    baseimg = im2rgb(img2rotate(face_recognition.load_image_file(image_from)))[
-        x1:y1, x2:y2
-    ]
+    baseimg = im2rgb(img2rotate(face_recognition.load_image_file(image_from)))[x1:y1, x2:y2]
     encodedim1 = face_recognition.face_encodings(baseimg)
-
+    
     if len(encodedim1) == 0:
         return False
     else:
@@ -56,7 +50,7 @@ def isPictureMatch(image, image_from, x1, y1, x2, y2) -> bool:
             return False
         else:
             encodedim2 = encodedim2[0]
-
+            
     except IndexError:
         return (False, "Index error, Authentication Failed")
 
@@ -107,7 +101,7 @@ def isFaceMatch(image, x1, y1, x2, y2, show=True, signal=None):
             resultList.append(res)
 
         frame = cv.circle(frame, (int(width / 2), int(height / 2)), 250, (0, 255, 0), 2)
-
+        
         if show:
             cv.imshow("frame", frame)
 
@@ -116,17 +110,18 @@ def isFaceMatch(image, x1, y1, x2, y2, show=True, signal=None):
         else:
             rgbImage = im2rgb(frame)
             h, w, ch = rgbImage.shape
-            convertToQtFormat = QImage(
-                rgbImage.data, w, h, ch * w, QImage.Format_RGB888
-            )
-            frame = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
+            convertToQtFormat = QImage(rgbImage.data, w, h, ch * w, QImage.Format_RGB888)
+            frame = convertToQtFormat.scaled(1561, 700, Qt.KeepAspectRatio)
 
-            signal.emit(len(resultList), frame)
+            signal.emit(len(resultList), frame, delay, False)
 
         delay -= 1
 
     cap.release()
     cv.destroyAllWindows()
+
+    if signal:
+        signal.emit(len(resultList), frame, -1, True)
 
     if len([x for x in resultList if x]) >= threshold:
         return True
@@ -136,3 +131,4 @@ def isFaceMatch(image, x1, y1, x2, y2, show=True, signal=None):
 
 if __name__ == "__main__":
     isFaceMatch("captured_card.jpg", 215, 590, 500, 800)
+
