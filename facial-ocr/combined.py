@@ -119,14 +119,17 @@ def isFaceMatch(image, x1, y1, x2, y2, show=True, signal=None):
             convertToQtFormat = QImage(
                 rgbImage.data, w, h, ch * w, QImage.Format_RGB888
             )
-            frame = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
+            frame = convertToQtFormat.scaled(1561, 700, Qt.KeepAspectRatio)
 
-            signal.emit(len(resultList), frame)
+            signal.emit(len(resultList), frame, delay, False)
 
         delay -= 1
 
     cap.release()
     cv.destroyAllWindows()
+
+    if signal:
+        signal.emit(len(resultList), frame, -1, True)
 
     if len([x for x in resultList if x]) >= threshold:
         return True
